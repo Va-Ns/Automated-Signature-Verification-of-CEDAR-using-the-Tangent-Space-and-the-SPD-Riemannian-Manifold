@@ -39,8 +39,7 @@ end
 
         for Curr_data = 1:numTrainingSamples
             [~, G_Train_index{Curr_data}] = pdist2(Codebooks.G_Train_Codebook, ...
-                                      Data.G_Training_set(Curr_data,:), "euclidean", "Smallest", ...
-                                                                              Options.numNeighbors);
+                                      Data.G_Training_set(Curr_data,:), "euclidean", "Smallest", 5);
             G_Train_Residual{Curr_data} = Data.G_Training_set(Curr_data,:) - ...
                                              Codebooks.G_Train_Codebook(G_Train_index{Curr_data},:);
 
@@ -62,8 +61,7 @@ end
         for Curr_data = 1:numTrainingSamples
 
             [~, F_Train_index{Curr_data}] = pdist2(Codebooks.F_Train_Codebook, ...
-                                      Data.F_Training_set(Curr_data,:), "euclidean", "Smallest", ...
-                                                                              Options.numNeighbors);
+                                      Data.F_Training_set(Curr_data,:), "euclidean", "Smallest", 5);
             F_Train_Residual{Curr_data} = Data.F_Training_set(Curr_data,:) - ...
                                              Codebooks.F_Train_Codebook(F_Train_index{Curr_data},:);
 
@@ -98,8 +96,7 @@ end
         for Curr_data = 1:numValidationSamples
 
             [~, G_Val_index{Curr_data}] = pdist2(Codebooks.G_Val_Codebook, ...
-                                      Data.G_Val_set(Curr_data,:), "euclidean", "Smallest", ...
-                                                                              Options.numNeighbors);
+                                      Data.G_Val_set(Curr_data,:), "euclidean", "Smallest", 5);
             G_Val_Residual{Curr_data} = Data.G_Val_set(Curr_data,:) - ...
                                              Codebooks.G_Val_Codebook(G_Val_index{Curr_data},:);
 
@@ -119,8 +116,7 @@ end
         for Curr_data = 1:numValidationSamples
 
             [~, F_Val_index{Curr_data}] = pdist2(Codebooks.F_Val_Codebook, ...
-                                      Data.F_Val_set(Curr_data,:), "euclidean", "Smallest", ...
-                                                                              Options.numNeighbors);
+                                      Data.F_Val_set(Curr_data,:), "euclidean", "Smallest", 5);
             F_Val_Residual{Curr_data} = Data.F_Val_set(Curr_data,:) - ...
                                              Codebooks.F_Val_Codebook(F_Val_index{Curr_data},:);
 
@@ -142,8 +138,8 @@ end
 
     
 
-        VLAD_Encoding.G_Train_VLAD_Encoding_normed =  G_Train_VLAD_Encoding_normed;
-        VLAD_Encoding.F_Train_VLAD_Encoding_normed =  F_Train_VLAD_Encoding_normed;
-        VLAD_Encoding.G_Val_VLAD_Encoding_normed = G_Val_VLAD_Encoding_normed;
-        VLAD_Encoding.F_Val_VLAD_Encoding_normed = F_Val_VLAD_Encoding_normed;
+    VLAD_Encoding.G_Train_VLAD_Encoding_normed =  G_Train_VLAD_Encoding_normed;
+    VLAD_Encoding.F_Train_VLAD_Encoding_normed =  F_Train_VLAD_Encoding_normed;
+    VLAD_Encoding.G_Val_VLAD_Encoding_normed = G_Val_VLAD_Encoding_normed;
+    VLAD_Encoding.F_Val_VLAD_Encoding_normed = F_Val_VLAD_Encoding_normed;
 end

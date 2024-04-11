@@ -38,7 +38,7 @@ for Neighbor = 1 : length(numNeighbors)
     tic
     for Iter = 1 : numIters
         
-        fprintf('Now in Iteration: %d for Neighbor:d  \n',Iter,numNeighbors(Neighbor))
+        fprintf('Now in Iteration for Neighbor :d  \n',Iter)
     
         % Randomly sample the indices every time for every folder. In this way, we retrieve half of the 
         % dataset's writers in a randomly sampled manner, here 27 Writers
