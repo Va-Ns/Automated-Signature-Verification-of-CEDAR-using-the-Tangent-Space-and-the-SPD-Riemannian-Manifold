@@ -9,11 +9,11 @@ WorkspaceDirectory = 'Workspace';
 numDirectories = 6;
 
 % Create the full path to the specific directory
-fullWorkspaceDirectoryPath = fullfile(baseDirectory, WorkspaceDirectory);
+WorkspaceDirectoryPath = fullfile(baseDirectory, WorkspaceDirectory);
 
 % Check if the specific directory exists, and if not, create it
-if ~exist(fullSpecificDirectoryPath, 'dir')
-    mkdir(fullSpecificDirectoryPath);
+if ~exist(WorkspaceDirectoryPath, 'dir')
+    mkdir(WorkspaceDirectoryPath);
 end
 %% In case you need man power
 
