@@ -4,16 +4,15 @@ clear;clc;close all;
 s = rng("default");
 
 % Define the base directory and the specific directory name
-baseDirectory = '"C:\Users\Nik_Vas\Desktop\GitHub\Second_Riemannian_Senario"';
+baseDirectory = 'C:\Users\Nik_Vas\Documents\GitHub\Second_Riemannian_Senario';
 WorkspaceDirectory = 'Workspace'; 
-numDirectories = 6;
 
 % Create the full path to the specific directory
 WorkspaceDirectoryPath = fullfile(baseDirectory, WorkspaceDirectory);
 
 % Check if the specific directory exists, and if not, create it
-if ~exist(WorkspaceDirectoryPath, 'dir')
-    mkdir(WorkspaceDirectoryPath);
+if ~exist(WorkspaceDirectoryPath, 'dir') 
+    mkdir Workspace 
 end
 %% In case you need man power
 
@@ -48,10 +47,18 @@ numNeighbors = [1 5 10 20 30 66];
 
 for Neighbor = 1 : length(numNeighbors)
 
-    
-
     % Create the directory name
-    directoryName = sprintf('Dir_%d', Neighbor);
+    DirectoryName = sprintf('For_Neighbor_%d', numNeighbors(Neighbor));
+
+    % Create the full directory path
+    DirectoryPath = fullfile(WorkspaceDirectoryPath, DirectoryName);
+
+    % Create the directory if it doesn't exist
+    if ~exist(DirectoryPath, 'dir')
+        
+        mkdir(DirectoryPath);
+        
+    end
 
 
     fprintf('Now on Neighbor: %d \n',numNeighbors(Neighbor))
@@ -148,8 +155,9 @@ for Neighbor = 1 : length(numNeighbors)
             VLAD(Neighbor).VLAD_Encoding{Iter,Fold} = VLADNV(Codebooks(Neighbor),Data(Neighbor), ...
                                                              "numNeighbors",numNeighbors(Neighbor));
     
-            fprintf('        Finished VLAD Encoding of Iter %d of Fold %d for Neighbor : %d \n', Iter, ...
-                                                                        Fold,numNeighbors(Neighbor))
+            fprintf('        Finished VLAD Encoding of Iter %d of Fold %d for Neighbor : %d \n', ...
+                                                                  Iter, Fold,numNeighbors(Neighbor))
+
     
             %% Create the labels for the data
              
@@ -175,7 +183,7 @@ for Neighbor = 1 : length(numNeighbors)
                               VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.F_Train_VLAD_Encoding_normed];
     
             Validation_Matrix = [VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.G_Val_VLAD_Encoding_normed;
-                                 VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.F_Val_VLAD_Encoding_normed];
+                                VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.F_Val_VLAD_Encoding_normed];
             %% Perform Hyperparameter Optimization on the SVM
                
             Mdl = fitcsvm(gpuArray(Training_Matrix),Training_Labels, ...
@@ -207,7 +215,7 @@ for Neighbor = 1 : length(numNeighbors)
             %% Retrain the best found SVM
     
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Best_Model{Fold} = ...
-                                              fitcsvm(gpuArray(Training_Matrix),Training_Labels, ...
+                                 fitcsvm(gpuArray(Training_Matrix),Training_Labels, ...
                                  'BoxConstraint'  ,     BestHyperparams(Iter).BoxConstraint{Fold}, ...
                                  'KernelFunction' ,     BestHyperparams(Iter).KernelFunction{Fold}, ...
                                  'KernelScale'    ,     BestHyperparams(Iter).KernelScale{Fold}, ...
@@ -247,22 +255,7 @@ for Neighbor = 1 : length(numNeighbors)
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Learning_Indices = randIndices;
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Testing_Indices = Testing_Indices';
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Codebooks{Fold} = Codebooks;
-            
-            % Plot the ROC
-            % figure
-            %
-            % plot(X,Y);
-            % hold on
-            % plot(EER,1-EER,'ro')
-            %
-            % xlabel('False positive rate')
-            % ylabel('True positive rate')
-            % title(['ROC Curve of fold ' num2str(Iter) ' of subfold ' num2str(Fold)])
-            % legend('ROC curve', 'EER point')
-            %
-            % hold off
-            % grid on;
-    
+         
             %% Change between the Testing and Learning Data for the K-Fold Cross Validation scheme
     
             % Here we transpose the Learning Data with the Testing Data, because in a 2-Fold cross
@@ -281,10 +274,72 @@ for Neighbor = 1 : length(numNeighbors)
     
     end
     
-    Learning_Stage_time = toc 
+    Learning_Stage_time(Neighbor) = toc 
+
+    %% Save the data per Neighbor
+    
+    Directory = [DirectoryPath '\'];
+
+        %% For the VLAD data
+
+    fprintf('   Saving VLAD for Neighbor: %d', numNeighbors(Neighbor))
+    FilenameVLAD = 'VLAD.mat';
+
+    % Create the full file path
+    fullFilePathVLAD = fullfile(Directory, FilenameVLAD);
+
+    save(fullFilePathVLAD,"VLAD")
+
+        %% For the Hyperparmateres
+    
+    fprintf('   Saving the Hyperparameters for Neighbor: %d', numNeighbors(Neighbor)')
+    FilenameBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
+
+    % Create the full file path
+    fullFilePathBestNeighbourHyperparam = fullfile(Directory, FilenameBestNeighbourHyperparam);
+
+    save(fullFilePathBestNeighbourHyperparam,"BestNeighborHyperParam")
+
+        %% For the Models
+    
+    fprintf('   Saving the Models for Neighbor: %d', numNeighbors(Neighbor)')
+    FilenameBestNeighbourMdl = 'BestNeighbourMdl.mat';
+
+    % Create the full file path
+    fullFilePathBestNeighbourMdl = fullfile(Directory, FilenameBestNeighbourMdl);
+
+    save(fullFilePathBestNeighbourMdl,"BestNeighborMdl")
+   
 
 end
 
-%% Testing Stage
+%% Save the Collective Data
 
+    %% For the Collective VLAD
+fprintf('Saving Collective VLAD')
+FilenameCollectiveVLAD = 'VLAD.mat';
 
+% Create the full file path
+fullFilePathCollectiveVLAD = fullfile(WorkspaceDirectory, FilenameCollectiveVLAD );
+
+save(fullFilePathCollectiveVLAD,"VLAD")
+
+    %% For the Collective Hyperparmateres
+
+fprintf('Saving Collective Hyperparameters')
+FilenameCollectiveBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
+
+% Create the full file path
+fullFilePathCollectiveBestNeighbourHyperparam = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourHyperparam);
+
+save(fullFilePathCollectiveBestNeighbourHyperparam,"BestNeighborHyperParam")
+
+    %% For the Collective Models
+
+fprintf('Saving Collective Models')
+FilenameCollectiveBestNeighbourMdl = 'BestNeighbourMdl.mat';
+
+% Create the full file path
+fullFilePathCollectiveBestNeighbourMdl = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourMdl);
+
+save(fullFilePathCollectiveBestNeighbourMdl ,"BestNeighborMdl")

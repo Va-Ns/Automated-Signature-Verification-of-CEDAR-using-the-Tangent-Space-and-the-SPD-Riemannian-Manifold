@@ -2,6 +2,19 @@
 
 clear;clc;close all;
 s = rng("default");
+
+% Define the base directory and the specific directory name
+baseDirectory = 'C:\Users\Nik_Vas\Documents\GitHub\Second_Riemannian_Senario';
+WorkspaceDirectory = 'Workspace'; 
+numDirectories = 6;
+
+% Create the full path to the specific directory
+WorkspaceDirectoryPath = fullfile(baseDirectory, WorkspaceDirectory);
+
+% Check if the specific directory exists, and if not, create it
+if ~exist(WorkspaceDirectoryPath, 'dir') 
+    mkdir Workspace 
+end
 %% In case you need man power
 
 % delete(gcp('nocreate'))
@@ -34,6 +47,20 @@ numFolds = 2;
 numNeighbors = [1 5 10 20 30 66];
 
 for Neighbor = 1 : length(numNeighbors)
+
+    % Create the directory name
+    DirectoryName = sprintf('For_Neighbor_%d', numNeighbors(Neighbor));
+
+    % Create the full directory path
+    DirectoryPath = fullfile(WorkspaceDirectoryPath, DirectoryName);
+
+    % Create the directory if it doesn't exist
+    if ~exist(DirectoryPath, 'dir')
+        
+        mkdir(DirectoryPath);
+        
+    end
+
 
     fprintf('Now on Neighbor: %d \n',numNeighbors(Neighbor))
 
@@ -126,11 +153,12 @@ for Neighbor = 1 : length(numNeighbors)
             Codebooks(Neighbor).G_Val_Codebook = G_Val_Codebook;
             Codebooks(Neighbor).F_Val_Codebook = F_Val_Codebook;
     
-            VLAD(Neighbor).VLAD_Encoding{Iter,Fold} = VLADNV(Codebooks(Neighbor),Data.(Neighbor), ...
+            VLAD(Neighbor).VLAD_Encoding{Iter,Fold} = VLADNV(Codebooks(Neighbor),Data(Neighbor), ...
                                                              "numNeighbors",numNeighbors(Neighbor));
     
-            fprintf('        Finished VLAD Encoding of Iter %d of Fold %d for Neighbor : %d \n', Iter, ...
-                                                                        Fold,numNeighbors(Neighbor))
+            fprintf('        Finished VLAD Encoding of Iter %d of Fold %d for Neighbor : %d \n', ...
+                                                                  Iter, Fold,numNeighbors(Neighbor))
+
     
             %% Create the labels for the data
              
@@ -156,7 +184,7 @@ for Neighbor = 1 : length(numNeighbors)
                               VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.F_Train_VLAD_Encoding_normed];
     
             Validation_Matrix = [VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.G_Val_VLAD_Encoding_normed;
-                                 VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.F_Val_VLAD_Encoding_normed];
+                                VLAD(Neighbor).VLAD_Encoding{Iter,Fold}.F_Val_VLAD_Encoding_normed];
             %% Perform Hyperparameter Optimization on the SVM
                
             Mdl = fitcsvm(gpuArray(Training_Matrix),Training_Labels, ...
@@ -262,10 +290,71 @@ for Neighbor = 1 : length(numNeighbors)
     
     end
     
-    Learning_Stage_time = toc 
+    Learning_Stage_time(Neighbor) = toc 
+
+    %% Save the data per Neighbor
+    
+    Directory = [DirectoryPath '\'];
+
+        %% For the VLAD data
+
+    fprintf('   Saving VLAD for Neighbor: %d', numNeighbors(Neighbor))
+    FilenameVLAD = 'VLAD.mat';
+
+    % Create the full file path
+    fullFilePathVLAD = fullfile(Directory, FilenameVLAD);
+
+    save(fullFilePathVLAD,"VLAD")
+
+        %% For the Hyperparmateres
+    
+    fprintf('   Saving the Hyperparameters')
+    FilenameBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
+
+    % Create the full file path
+    fullFilePathBestNeighbourHyperparam = fullfile(Directory, FilenameBestNeighbourHyperparam);
+
+    save(fullFilePathBestNeighbourHyperparam,"BestNeighborHyperParam")
+
+        %% For the Models
+    
+    fprintf('   Saving the Models')
+    FilenameBestNeighbourMdl = 'BestNeighbourMdl.mat';
+
+    % Create the full file path
+    fullFilePathBestNeighbourMdl = fullfile(Directory, FilenameBestNeighbourMdl);
+
+    save(fullFilePathBestNeighbourMdl,"BestNeighborMdl")
+   
 
 end
 
-%% Testing Stage
+%% Save the Collective Data
 
+fprintf('Saving Collective VLAD')
+FilenameCollectiveVLAD = 'VLAD.mat';
 
+% Create the full file path
+fullFilePathCollectiveVLAD = fullfile(WorkspaceDirectory, FilenameCollectiveVLAD );
+
+save(fullFilePathCollectiveVLAD,"VLAD")
+
+%% For the Collective Hyperparmateres
+
+fprintf('Saving Collective Hyperparameters')
+FilenameCollectiveBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
+
+% Create the full file path
+fullFilePathCollectiveBestNeighbourHyperparam = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourHyperparam);
+
+save(fullFilePathCollectiveBestNeighbourHyperparam,"BestNeighborHyperParam")
+
+%% For the Collective Models
+
+fprintf('Saving Collective Models')
+FilenameCollectiveBestNeighbourMdl = 'BestNeighbourMdl.mat';
+
+% Create the full file path
+fullFilePathCollectiveBestNeighbourMdl = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourMdl);
+
+save(fullFilePathCollectiveBestNeighbourMdl ,"BestNeighborMdl")
