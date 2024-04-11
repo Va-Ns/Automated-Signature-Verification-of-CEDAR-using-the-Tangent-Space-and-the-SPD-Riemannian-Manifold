@@ -2,6 +2,19 @@
 
 clear;clc;close all;
 s = rng("default");
+
+% Define the base directory and the specific directory name
+baseDirectory = '"C:\Users\Nik_Vas\Desktop\GitHub\Second_Riemannian_Senario"';
+WorkspaceDirectory = 'Workspace'; 
+numDirectories = 6;
+
+% Create the full path to the specific directory
+fullWorkspaceDirectoryPath = fullfile(baseDirectory, WorkspaceDirectory);
+
+% Check if the specific directory exists, and if not, create it
+if ~exist(fullSpecificDirectoryPath, 'dir')
+    mkdir(fullSpecificDirectoryPath);
+end
 %% In case you need man power
 
 % delete(gcp('nocreate'))
@@ -34,6 +47,12 @@ numFolds = 2;
 numNeighbors = [1 5 10 20 30 66];
 
 for Neighbor = 1 : length(numNeighbors)
+
+    
+
+    % Create the directory name
+    directoryName = sprintf('Dir_%d', Neighbor);
+
 
     fprintf('Now on Neighbor: %d \n',numNeighbors(Neighbor))
 
