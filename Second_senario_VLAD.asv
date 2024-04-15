@@ -6,7 +6,6 @@ s = rng("default");
 % Define the base directory and the specific directory name
 baseDirectory = 'C:\Users\Nik_Vas\Documents\GitHub\Second_Riemannian_Senario';
 WorkspaceDirectory = 'Workspace'; 
-numDirectories = 6;
 
 % Create the full path to the specific directory
 WorkspaceDirectoryPath = fullfile(baseDirectory, WorkspaceDirectory);
@@ -44,7 +43,7 @@ F_Vecs = VecCell(F_CovMa);
 numIters = 5;
 numFolds = 2;
 
-numNeighbors = [1 5 10 20 30 66];
+numNeighbors = [1 5 1 20 30 66];
 
 for Neighbor = 1 : length(numNeighbors)
 
@@ -216,7 +215,7 @@ for Neighbor = 1 : length(numNeighbors)
             %% Retrain the best found SVM
     
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Best_Model{Fold} = ...
-                                              fitcsvm(gpuArray(Training_Matrix),Training_Labels, ...
+                                 fitcsvm(gpuArray(Training_Matrix),Training_Labels, ...
                                  'BoxConstraint'  ,     BestHyperparams(Iter).BoxConstraint{Fold}, ...
                                  'KernelFunction' ,     BestHyperparams(Iter).KernelFunction{Fold}, ...
                                  'KernelScale'    ,     BestHyperparams(Iter).KernelScale{Fold}, ...
@@ -256,22 +255,7 @@ for Neighbor = 1 : length(numNeighbors)
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Learning_Indices = randIndices;
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Testing_Indices = Testing_Indices';
             BestNeighborMdl(Neighbor).Best_Mdl(Iter).Codebooks{Fold} = Codebooks;
-            
-            % Plot the ROC
-            % figure
-            %
-            % plot(X,Y);
-            % hold on
-            % plot(EER,1-EER,'ro')
-            %
-            % xlabel('False positive rate')
-            % ylabel('True positive rate')
-            % title(['ROC Curve of fold ' num2str(Iter) ' of subfold ' num2str(Fold)])
-            % legend('ROC curve', 'EER point')
-            %
-            % hold off
-            % grid on;
-    
+         
             %% Change between the Testing and Learning Data for the K-Fold Cross Validation scheme
     
             % Here we transpose the Learning Data with the Testing Data, because in a 2-Fold cross
@@ -308,7 +292,7 @@ for Neighbor = 1 : length(numNeighbors)
 
         %% For the Hyperparmateres
     
-    fprintf('   Saving the Hyperparameters')
+    fprintf('   Saving the Hyperparameters for Neighbor: %d', numNeighbors(Neighbor)')
     FilenameBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
 
     % Create the full file path
@@ -318,7 +302,7 @@ for Neighbor = 1 : length(numNeighbors)
 
         %% For the Models
     
-    fprintf('   Saving the Models')
+    fprintf('   Saving the Models for Neighbor: %d', numNeighbors(Neighbor)')
     FilenameBestNeighbourMdl = 'BestNeighbourMdl.mat';
 
     % Create the full file path
@@ -331,6 +315,7 @@ end
 
 %% Save the Collective Data
 
+    %% For the Collective VLAD
 fprintf('Saving Collective VLAD')
 FilenameCollectiveVLAD = 'VLAD.mat';
 
@@ -339,7 +324,7 @@ fullFilePathCollectiveVLAD = fullfile(WorkspaceDirectory, FilenameCollectiveVLAD
 
 save(fullFilePathCollectiveVLAD,"VLAD")
 
-%% For the Collective Hyperparmateres
+    %% For the Collective Hyperparmateres
 
 fprintf('Saving Collective Hyperparameters')
 FilenameCollectiveBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
@@ -349,7 +334,7 @@ fullFilePathCollectiveBestNeighbourHyperparam = fullfile(WorkspaceDirectory, Fil
 
 save(fullFilePathCollectiveBestNeighbourHyperparam,"BestNeighborHyperParam")
 
-%% For the Collective Models
+    %% For the Collective Models
 
 fprintf('Saving Collective Models')
 FilenameCollectiveBestNeighbourMdl = 'BestNeighbourMdl.mat';
