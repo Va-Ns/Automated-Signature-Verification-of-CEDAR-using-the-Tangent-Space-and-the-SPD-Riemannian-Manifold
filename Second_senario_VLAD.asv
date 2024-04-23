@@ -43,7 +43,7 @@ F_Vecs = VecCell(F_CovMa);
 numIters = 5;
 numFolds = 2;
 
-numNeighbors = [1 5 11 21 31 65];
+numNeighbors = [1 5 10 30 66] ;
 
 for Neighbor = 1 : length(numNeighbors)
 
@@ -282,7 +282,7 @@ for Neighbor = 1 : length(numNeighbors)
 
         %% For the VLAD data
 
-    fprintf('   Saving VLAD for Neighbor: %d', numNeighbors(Neighbor))
+    fprintf('   Saving VLAD for Neighbor: %d \n', numNeighbors(Neighbor))
     FilenameVLAD = 'VLAD.mat';
 
     % Create the full file path
@@ -292,7 +292,7 @@ for Neighbor = 1 : length(numNeighbors)
 
         %% For the Hyperparmateres
     
-    fprintf('   Saving the Hyperparameters for Neighbor: %d', numNeighbors(Neighbor)')
+    fprintf('   Saving the Hyperparameters for Neighbor: %d \n', numNeighbors(Neighbor)')
     FilenameBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
 
     % Create the full file path
@@ -302,7 +302,7 @@ for Neighbor = 1 : length(numNeighbors)
 
         %% For the Models
     
-    fprintf('   Saving the Models for Neighbor: %d', numNeighbors(Neighbor)')
+    fprintf('   Saving the Models for Neighbor: %d \n', numNeighbors(Neighbor)')
     FilenameBestNeighbourMdl = 'BestNeighbourMdl.mat';
 
     % Create the full file path
@@ -316,6 +316,7 @@ end
 %% Save the Collective Data
 
     %% For the Collective VLAD
+
 fprintf('Saving Collective VLAD\n')
 FilenameCollectiveVLAD = 'VLAD.mat';
 

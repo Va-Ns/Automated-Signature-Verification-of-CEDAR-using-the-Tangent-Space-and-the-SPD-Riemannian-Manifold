@@ -43,7 +43,7 @@ F_Vecs = VecCell(F_CovMa);
 numIters = 5;
 numFolds = 2;
 
-numNeighbors = 1 ;
+numNeighbors = [1 5 10 30 66] ;
 
 for Neighbor = 1 : length(numNeighbors)
 
@@ -282,33 +282,33 @@ for Neighbor = 1 : length(numNeighbors)
 
         %% For the VLAD data
 
-    % fprintf('   Saving VLAD for Neighbor: %d \n', numNeighbors(Neighbor))
-    % FilenameVLAD = 'VLAD.mat';
-    % 
-    % % Create the full file path
-    % fullFilePathVLAD = fullfile(Directory, FilenameVLAD);
-    % 
-    % save(fullFilePathVLAD,"VLAD")
+    fprintf('   Saving VLAD for Neighbor: %d \n', numNeighbors(Neighbor))
+    FilenameVLAD = 'VLAD.mat';
 
-        %% For the Hyperparmateres
+    % Create the full file path
+    fullFilePathVLAD = fullfile(Directory, FilenameVLAD);
+
+    save(fullFilePathVLAD,"VLAD")
+
+        %% For the Hyperparameters
     
-    % fprintf('   Saving the Hyperparameters for Neighbor: %d \n', numNeighbors(Neighbor)')
-    % FilenameBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
-    % 
-    % % Create the full file path
-    % fullFilePathBestNeighbourHyperparam = fullfile(Directory, FilenameBestNeighbourHyperparam);
-    % 
-    % save(fullFilePathBestNeighbourHyperparam,"BestNeighborHyperParam")
+    fprintf('   Saving the Hyperparameters for Neighbor: %d \n', numNeighbors(Neighbor)')
+    FilenameBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
+
+    % Create the full file path
+    fullFilePathBestNeighbourHyperparam = fullfile(Directory, FilenameBestNeighbourHyperparam);
+
+    save(fullFilePathBestNeighbourHyperparam,"BestNeighborHyperParam")
 
         %% For the Models
     
-    % fprintf('   Saving the Models for Neighbor: %d \n', numNeighbors(Neighbor)')
-    % FilenameBestNeighbourMdl = 'BestNeighbourMdl.mat';
-    % 
-    % % Create the full file path
-    % fullFilePathBestNeighbourMdl = fullfile(Directory, FilenameBestNeighbourMdl);
-    % 
-    % save(fullFilePathBestNeighbourMdl,"BestNeighborMdl")
+    fprintf('   Saving the Models for Neighbor: %d \n', numNeighbors(Neighbor)')
+    FilenameBestNeighbourMdl = 'BestNeighbourMdl.mat';
+
+    % Create the full file path
+    fullFilePathBestNeighbourMdl = fullfile(Directory, FilenameBestNeighbourMdl);
+
+    save(fullFilePathBestNeighbourMdl,"BestNeighborMdl")
    
 
 end
@@ -317,30 +317,30 @@ end
 
     %% For the Collective VLAD
 
-% fprintf('Saving Collective VLAD\n')
-% FilenameCollectiveVLAD = 'VLAD.mat';
-% 
-% % Create the full file path
-% fullFilePathCollectiveVLAD = fullfile(WorkspaceDirectory, FilenameCollectiveVLAD );
-% 
-% save(fullFilePathCollectiveVLAD,"VLAD")
+fprintf('Saving Collective VLAD\n')
+FilenameCollectiveVLAD = 'VLAD.mat';
+
+% Create the full file path
+fullFilePathCollectiveVLAD = fullfile(WorkspaceDirectory, FilenameCollectiveVLAD );
+
+save(fullFilePathCollectiveVLAD,"VLAD")
 
     %% For the Collective Hyperparmateres
 
-% fprintf('Saving Collective Hyperparameters\n')
-% FilenameCollectiveBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
-% 
-% % Create the full file path
-% fullFilePathCollectiveBestNeighbourHyperparam = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourHyperparam);
-% 
-% save(fullFilePathCollectiveBestNeighbourHyperparam,"BestNeighborHyperParam")
+fprintf('Saving Collective Hyperparameters\n')
+FilenameCollectiveBestNeighbourHyperparam = 'BestNeighbourHyperparam.mat';
+
+% Create the full file path
+fullFilePathCollectiveBestNeighbourHyperparam = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourHyperparam);
+
+save(fullFilePathCollectiveBestNeighbourHyperparam,"BestNeighborHyperParam")
 
     %% For the Collective Models
 
-% fprintf('Saving Collective Models\n')
-% FilenameCollectiveBestNeighbourMdl = 'BestNeighbourMdl.mat';
-% 
-% % Create the full file path
-% fullFilePathCollectiveBestNeighbourMdl = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourMdl);
-% 
-% save(fullFilePathCollectiveBestNeighbourMdl ,"BestNeighborMdl")
+fprintf('Saving Collective Models\n')
+FilenameCollectiveBestNeighbourMdl = 'BestNeighbourMdl.mat';
+
+% Create the full file path
+fullFilePathCollectiveBestNeighbourMdl = fullfile(WorkspaceDirectory, FilenameCollectiveBestNeighbourMdl);
+
+save(fullFilePathCollectiveBestNeighbourMdl ,"BestNeighborMdl")
