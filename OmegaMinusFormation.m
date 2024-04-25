@@ -28,23 +28,28 @@ function [F_Training_set, F_Val_set]= OmegaMinusFormation(G_Learning_Data,F_Lear
             
             % And for the current Forgery Signature of the current Writer
             for CurFSign = 1 : length(Current_F_Data)
+
+                X = Current_G_Data{CurGSign};
+
+                Y = Current_F_Data{CurFSign};
+
+                X_s = sqrtm(X);
+
+                Sign_AIRM(CurGSign).Pairs{CurFSign,:} = logm(X_s\Y/X_s);
                 
-                % Assign the Dichotomy Transform between the Genuine and Forgery Signature of the
-                % current Writer into a struct. The result will be a 1-by-17 structure where each
-                % field is a 17-by-55 matrix that holds the Dichotomy Transform of the current
-                % Genuine signature with the Forgery signatures of the current Writer.
-                Sign_Dichotomy(CurGSign).Pairs(CurFSign,:) = abs(Current_G_Data{CurGSign}- ...
-                                                                        Current_F_Data{CurFSign});
+                Sign_Vec(CurGSign).Per_pair{CurFSign} = ...
+                real(VecsOfTangentPlaneNV(Sign_AIRM(CurGSign).Pairs{CurFSign,:}))';
+
             end
 
         end
-        
+
         % After the procedure ends, it's time to collect the data into a single matrix.
         Sign_Cur_Writer = [];
 
-        for i = 1 : length(Sign_Dichotomy)
+        for i = 1 : length(Sign_Vec)
 
-            Sign_Cur_Writer = [Sign_Cur_Writer;Sign_Dichotomy(i).Pairs];
+            Sign_Cur_Writer = [Sign_Cur_Writer;vertcat(Sign_Vec(i).Per_pair{:})];
 
         end
 
@@ -79,12 +84,16 @@ function [F_Training_set, F_Val_set]= OmegaMinusFormation(G_Learning_Data,F_Lear
             % And for the current Forgery Signature of the current Writer
             for CurFSign = 1 : length(Current_F_Data)
                 
-                % Assign the Dichotomy Transform between the Genuine and Forgery Signature of the
-                % current Writer into a struct. The result will be a 1-by-7 structure where each
-                % field is a 7-by-55 matrix that holds the Dichotomy Transform of the current
-                % Genuine signature with the Forgery signatures of the current Writer.
-                Sign_Val_Dichotomy(CurGSign).Pairs(CurFSign,:) = abs(Current_G_Data{CurGSign}- ...
-                                                                        Current_F_Data{CurFSign});
+                X = Current_G_Data{CurGSign};
+
+                Y = Current_F_Data{CurFSign};
+
+                X_s = sqrtm(X);
+
+                Sign_Val_AIRM(CurGSign).Pairs{CurFSign,:} = logm(X_s\Y/X_s);
+                
+                Sign_Val_Vec(CurGSign).Per_pair{CurFSign} = ...
+                real(VecsOfTangentPlaneNV(Sign_AIRM(CurGSign).Pairs{CurFSign,:}))';
             end
 
         end
@@ -92,9 +101,9 @@ function [F_Training_set, F_Val_set]= OmegaMinusFormation(G_Learning_Data,F_Lear
         % After the procedure ends, it's time to collect the data into a single matrix.
         Sign_Cur_Writer = [];
 
-        for i = 1 : length(Sign_Val_Dichotomy)
+        for i = 1 : length(Sign_Val_Vec)
 
-            Sign_Cur_Writer = [Sign_Cur_Writer;Sign_Val_Dichotomy(i).Pairs];
+            Sign_Cur_Writer = [Sign_Cur_Writer;vertcat(Sign_Val_Vec(i).Per_pair{:})];
 
         end
 
