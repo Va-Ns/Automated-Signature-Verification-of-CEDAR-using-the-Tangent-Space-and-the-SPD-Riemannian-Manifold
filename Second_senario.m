@@ -265,3 +265,51 @@ fullFilePathBestHyperparam = fullfile(WorkspaceDirectory, FilenameBestHyperparam
 
 save(fullFilePathBestHyperparam,"BestHyperparams")
 
+
+%% Testing Stage
+
+tic
+for Iter = 1 : numIters
+
+    % Here the internal iteration refers to the 5 iterations performed during the Learning Stage
+    fprintf('Now in internal iteration: %d \n',Iter)
+    
+    % Create the Testing data per Fold per Iteration using the saved indices
+    G_curr_fold =  G_Vecs(Best_Mdl(Iter).Testing_Indices',:);
+    F_curr_fold =  F_Vecs(Best_Mdl(Iter).Testing_Indices',:);
+
+    for Fold = 1 : numFolds
+
+        fprintf('Now in Fold: %d of Iter: %d \n',Fold,Iter)
+
+    %% Get the SVM classifier per fold
+
+        % Use max as a way to find the maximum AUC per iteration per fold and using the created
+        % index, collect the classificationSVM object from the corresponding variable of the struct
+        % [~,Index] = (max(Best_Mdl(Iter).AUC,[],"all"));
+
+        SVM = Best_Mdl(Iter).Best_Model{Fold};
+
+    
+   %% Create the Reference and Question Data
+   
+        [Data,Metrics] = RefsQuestionNV(G_curr_fold,F_curr_fold,SVM);
+    
+        Iter_Data(Iter).Data = Data;
+        Iter_Data(Iter).Metrics = Metrics;
+
+        EER_matrix{Iter,Fold} = horzcat(Iter_Data(Iter).Metrics(:).mean_EER_per_Iter_per_Writer);
+        Mean_EER_per_iter_per_fold(Iter,Fold) = 100*mean(EER_matrix{Iter,Fold});
+        
+        % Change the data in order the next fold to contain the indices of the Learning-Testing of
+        % the other folder.
+       
+        G_curr_fold = G_Vecs(Best_Mdl(Iter).Learning_Indices,:);
+        F_curr_fold = F_Vecs(Best_Mdl(Iter).Learning_Indices,:);
+
+
+    end
+
+end
+Testing_time = toc % With the use of for: time = 751.0769 secs | parfor time = 437.9042
+Total_mean = mean(Mean_EER_per_iter_per_fold,"all");
