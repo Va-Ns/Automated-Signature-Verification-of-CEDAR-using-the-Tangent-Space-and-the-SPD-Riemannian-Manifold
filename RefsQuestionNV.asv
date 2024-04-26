@@ -72,27 +72,27 @@ function [Data,Metrics] = RefsQuestionNV(G_Testing_Data,F_Testing_Data,SVM,Optio
 
                     X_s = sqrtm(X);
     
-                    Data(Writer).AIRM{numQuestion,RefData} = logm(X_s\Y/X_s);
+                    Data(Writer).AIRM{RefData,numQuestion} = logm(X_s\Y/X_s);
 
-                    Data(Writer).Vecs{numQuestion,RefData} = ...
-                               real(VecsOfTangentPlaneNV(Data(Writer).AIRM{numQuestion,RefData}))';
+                    Data(Writer).Vecs{RefData,numQuestion} = ...
+                               real(VecsOfTangentPlaneNV(Data(Writer).AIRM{RefData,numQuestion}))';
 
                 end
 
                 % Vertically concatenate the vectors of the Dichotomy Transform into a matrix to
                 % feed it to predict with the SVM object
-                Data(Writer).Vecs_Matrix{numQuestion} = vertcat(Data(Writer).Vecs{numQuestion,:});
+                Data(Writer).Vecs_Matrix{RefData} = vertcat(Data(Writer).Vecs{RefData,:});
 
-                [Labels,Scores] = predict(SVM,Data(Writer).Vecs_Matrix{numQuestion});
+                [Labels,Scores] = predict(SVM,Data(Writer).Vecs_Matrix{RefData});
                 
                 % Store the scores
-                Data(Writer).Scores{numQuestion} = Scores;
+                Data(Writer).Scores{RefData} = Scores;
 
                 % Store the maximum value of Scores
-                [Data(Writer).maxScore(numQuestion),Ind] = max(Scores(:,2),[],"all");
+                [Data(Writer).maxScore(RefData),Ind] = max(Scores(:,2),[],"all");
 
                 % Select the label where the maximum score is found
-                Data(Writer).Labels{numQuestion} = Labels(Ind,:);
+                Data(Writer).Labels{RefData} = Labels(Ind,:);
 
             end
 

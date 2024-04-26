@@ -18,10 +18,10 @@ if ~exist(WorkspaceDirectoryPath, 'dir')
 end
 %% In case you need man power
 
-% delete(gcp('nocreate'))
-% maxWorkers = maxNumCompThreads;
-% disp("Maximum number of workers: " + maxWorkers);
-% pool=parpool(maxWorkers/2);
+delete(gcp('nocreate'))
+maxWorkers = maxNumCompThreads;
+disp("Maximum number of workers: " + maxWorkers);
+pool=parpool(maxWorkers/2);
 
 %% Load the data
 Covariance_matrices = load("CEDAR_covs10_v5_new_thlauto.mat");
@@ -244,7 +244,6 @@ Learning_Stage_time(Neighbor) = toc
 
 
 %% Save the Training Data
-
     %% For the Model
 
 fprintf('Saving Best Model \n')
@@ -269,14 +268,14 @@ save(fullFilePathBestHyperparam,"BestHyperparams")
 %% Testing Stage
 
 tic
-for Iter = 1 : numIters
+parfor Iter = 1 : numIters
 
     % Here the internal iteration refers to the 5 iterations performed during the Learning Stage
     fprintf('Now in internal iteration: %d \n',Iter)
     
     % Create the Testing data per Fold per Iteration using the saved indices
-    G_curr_fold =  G_Vecs(Best_Mdl(Iter).Testing_Indices',:);
-    F_curr_fold =  F_Vecs(Best_Mdl(Iter).Testing_Indices',:);
+    G_curr_fold =  G_CovMa(Best_Mdl(Iter).Testing_Indices',:);
+    F_curr_fold =  F_CovMa(Best_Mdl(Iter).Testing_Indices',:);
 
     for Fold = 1 : numFolds
 
@@ -304,8 +303,8 @@ for Iter = 1 : numIters
         % Change the data in order the next fold to contain the indices of the Learning-Testing of
         % the other folder.
        
-        G_curr_fold = G_Vecs(Best_Mdl(Iter).Learning_Indices,:);
-        F_curr_fold = F_Vecs(Best_Mdl(Iter).Learning_Indices,:);
+        G_curr_fold = G_CovMa(Best_Mdl(Iter).Learning_Indices,:);
+        F_curr_fold = F_CovMa(Best_Mdl(Iter).Learning_Indices,:);
 
 
     end
