@@ -267,6 +267,12 @@ save(fullFilePathBestHyperparam,"BestHyperparams")
 
 %% Testing Stage
 
+% Initialize Iter_Data before the parfor loop
+Iter_Data = struct('Data', cell(1, numIters), 'Metrics', cell(1, numIters));
+
+% Initialize EER_matrix before the parfor loop
+EER_matrix = cell(numIters, numFolds);
+
 tic
 parfor Iter = 1 : numIters
 
@@ -283,14 +289,9 @@ parfor Iter = 1 : numIters
 
     %% Get the SVM classifier per fold
 
-        % Use max as a way to find the maximum AUC per iteration per fold and using the created
-        % index, collect the classificationSVM object from the corresponding variable of the struct
-        % [~,Index] = (max(Best_Mdl(Iter).AUC,[],"all"));
-
         SVM = Best_Mdl(Iter).Best_Model{Fold};
 
-    
-   %% Create the Reference and Question Data
+    %% Create the Reference and Question Data
    
         [Data,Metrics] = RefsQuestionNV(G_curr_fold,F_curr_fold,SVM);
     
@@ -312,3 +313,5 @@ parfor Iter = 1 : numIters
 end
 Testing_time = toc % With the use of for: time = 751.0769 secs | parfor time = 437.9042
 Total_mean = mean(Mean_EER_per_iter_per_fold,"all");
+
+% Results = table(Dataset,)
