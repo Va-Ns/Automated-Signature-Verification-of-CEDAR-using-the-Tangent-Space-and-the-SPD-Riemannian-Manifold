@@ -1,6 +1,6 @@
 # Automated Signature Verification of CEDAR using the Tangent Space and the SPD Riemannian Manifold in MATLAB
 
-This project aims at capturing the fidelity presented by the schematic of the exclusive use of the Tangent Space induced by the intuitive representation of the signatures as points of the SPD Riemannian Manifold.
+This project aims at capturing the fidelity presented by the schematic of the use of the logarithmic mapping: an intuitive form of subtraction between two points in the SPD Riemannian Manifold.
 
 ![image](https://github.com/user-attachments/assets/0072b669-ffbf-4875-a132-91bc2c6b328d)
 
