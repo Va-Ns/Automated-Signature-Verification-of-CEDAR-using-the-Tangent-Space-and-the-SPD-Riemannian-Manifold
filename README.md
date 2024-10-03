@@ -10,14 +10,14 @@ The dotted line marks the transformation of the base of Y to the coordinate syst
 
 # Project Structure
 
-- conv2vec_with_logm.m: Contains functions or scripts related to converting data with logarithmic mapping.
-- OmegaMinusFormation.m: Handles the formation of Omega Minus matrices.
-- OmegaPlusFormation.m: Handles the formation of Omega Plus matrices.
-- RefsQuestionNV.m: Contains references or questions related to NV.
-- Second_senario.m: Implements the second scenario for a specific experiment or simulation.
-- Train_Val_Split.m: Splits data into training and validation sets.
-- VecCell.m: Manages vector cells.
-- VecsOfTangentPlaneNV.m: Handles vectors of the tangent plane for NV.
+- _**conv2vec_with_logm.m**_: Contains functions or scripts related to converting data with logarithmic mapping.
+- _**OmegaMinusFormation.m**_: Handles the formation of Omega Minus matrices.
+- _**OmegaPlusFormation.m**_: Handles the formation of Omega Plus matrices.
+- _**RefsQuestionNV.m**_: Contains references or questions related to NV.
+- _**Second_senario.m**_: Implements the second scenario for a specific experiment or simulation.
+- _**Train_Val_Split.m**_: Splits data into training and validation sets.
+- _**VecCell.m**_: Manages vector cells.
+- _**VecsOfTangentPlaneNV.m**_: Handles vectors of the tangent plane for NV.
 
 # Pseudocodes
 
